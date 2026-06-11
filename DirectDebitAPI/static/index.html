@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WLTH – Direct Debit Request</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --blue:   #1565C0;
+    --dark:   #1a1a2e;
+    --red:    #d32f2f;
+    --grey:   #757575;
+    --border: #d4d4d4;
+    --bg:     #f2f3f5;
+    --white:  #ffffff;
+    --radius: 10px;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: var(--bg); color: var(--dark); min-height: 100vh; }
+
+  /* ── Header ── */
+  .site-header { padding: 16px 24px; background: var(--white);
+                 border-bottom: 1px solid var(--border); display: flex;
+                 align-items: center; gap: 16px; }
+  .logo { font-weight: 800; font-size: 1.2rem; letter-spacing: .04em; color: var(--dark); }
+
+  /* ── Layout ── */
+  main { max-width: 760px; margin: 0 auto; padding: 28px 16px 60px; }
+
+  /* ── Card ── */
+  .card { background: var(--white); border-radius: var(--radius);
+          box-shadow: 0 1px 6px rgba(0,0,0,.09); padding: 28px 28px 32px; margin-bottom: 20px; }
+  .card-title { font-size: 1.4rem; font-weight: 700; color: var(--dark); margin-bottom: 16px; }
+
+  /* ── Info banner ── */
+  .info-banner { background: var(--blue); color: #fff; border-radius: 8px;
+                 padding: 14px 18px; font-size: .88rem; display: flex;
+                 align-items: center; gap: 12px; margin-bottom: 24px; }
+  .info-banner svg { flex-shrink: 0; }
+
+  /* ── Selector buttons (borrower count) ── */
+  .selector-label { font-size: .95rem; font-weight: 600; margin-bottom: 12px; }
+  .selector-row   { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 24px; }
+  .sel-btn {
+    flex: 1; min-width: 120px; padding: 14px 10px;
+    border: 1.5px solid var(--border); border-radius: 8px;
+    background: #fafafa; cursor: pointer; text-align: center;
+    font-size: .82rem; color: var(--grey); transition: all .15s;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+  }
+  .sel-btn:hover  { border-color: #888; color: var(--dark); }
+  .sel-btn.active { background: var(--dark); border-color: var(--dark); color: #fff; }
+  .sel-btn .icon  { font-size: 1.4rem; }
+  .sel-btn .label { font-weight: 500; font-size: .8rem; }
+
+  /* ── Section heading ── */
+  .section-title { font-size: 1rem; font-weight: 700; color: var(--dark);
+                   margin: 24px 0 14px; padding-bottom: 6px;
+                   border-bottom: 1.5px solid var(--border); }
+
+  /* ── Field ── */
+  .field         { margin-bottom: 16px; }
+  .field label   { display: block; font-size: .82rem; color: var(--grey); margin-bottom: 5px; }
+  .field label .req { color: var(--red); margin-left: 2px; }
+  .field input, .field textarea {
+    width: 100%; padding: 10px 13px; border: 1.5px solid var(--border);
+    border-radius: 6px; font-size: .9rem; color: var(--dark);
+    background: var(--white); transition: border-color .15s; outline: none;
+  }
+  .field input:focus, .field textarea:focus { border-color: var(--blue); }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .field.error input, .field.error textarea { border-color: var(--red); }
+  .err-msg { display: none; color: var(--red); font-size: .78rem;
+             margin-top: 5px; align-items: center; gap: 5px; }
+  .err-msg::before { content: "⊘"; font-size: .9rem; }
+  .field.error .err-msg { display: flex; }
+
+  /* ── Row ── */
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 480px) { .row { grid-template-columns: 1fr; } }
+
+  /* ── Account card ── */
+  .account-card { border: 1.5px solid var(--border); border-radius: 8px;
+                  padding: 18px; margin-bottom: 16px; background: #fafafa; }
+  .account-card-title { font-size: .88rem; font-weight: 700; color: var(--dark);
+                         margin-bottom: 14px; }
+
+  /* ── File upload ── */
+  .file-upload-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .file-btn { background: #f0f0f0; border: 1.5px solid var(--border); border-radius: 6px;
+              padding: 9px 16px; font-size: .85rem; cursor: pointer; white-space: nowrap; color: var(--dark); }
+  .file-btn:hover { background: #e0e0e0; }
+  .file-name { font-size: .85rem; color: var(--grey); }
+  .file-name.selected { color: var(--dark); font-weight: 500; }
+  .file-hint { font-size: .75rem; color: var(--grey); margin-top: 4px; }
+  .file-remove-btn { background: none; border: none; color: var(--red); font-size: .8rem;
+                     font-weight: 600; cursor: pointer; padding: 4px 8px; border-radius: 4px; white-space: nowrap; }
+  .file-remove-btn:hover { background: #fff0f0; }
+
+  /* ── Toggle radio buttons ── */
+  .toggle-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .toggle-opt input[type="radio"] { display: none; }
+  .toggle-opt span { display: inline-block; padding: 8px 18px; border: 1.5px solid var(--border);
+                     border-radius: 6px; font-size: .85rem; color: var(--grey); cursor: pointer;
+                     transition: all .15s; user-select: none; }
+  .toggle-opt input[type="radio"]:checked + span { background: var(--dark); border-color: var(--dark); color: #fff; }
+  .toggle-opt span:hover { border-color: #888; color: var(--dark); }
+
+  /* ── Signature ── */
+  .sig-wrap   { border: 1.5px solid var(--border); border-radius: 6px;
+                background: #f9f9f9; padding: 4px; display: inline-block; }
+  .sig-canvas { display: block; cursor: crosshair; touch-action: none;
+                border-radius: 4px; }
+  .sig-btns   { display: flex; gap: 8px; margin-top: 8px; }
+  .btn-sign   { background: var(--dark); color: #fff; border: none; border-radius: 6px;
+                padding: 9px 22px; font-size: .85rem; font-weight: 600; cursor: pointer; }
+  .btn-sign:hover   { opacity: .85; }
+  .btn-clear  { background: #e0e0e0; color: var(--dark); border: none; border-radius: 6px;
+                padding: 9px 18px; font-size: .85rem; cursor: pointer; }
+  .btn-clear:hover { background: #ccc; }
+  .sig-status { font-size: .78rem; color: var(--grey); margin-top: 5px; }
+  .sig-status.ok  { color: #2e7d32; }
+
+  /* ── Submit area ── */
+  .submit-area { margin-top: 28px; }
+  .form-error-banner { background: #fff3f3; border: 1.5px solid #f5c6c6;
+                        border-radius: 8px; padding: 12px 16px; color: var(--red);
+                        font-size: .85rem; margin-bottom: 16px; display: none;
+                        align-items: center; gap: 10px; }
+  .form-error-banner.show { display: flex; }
+  .btn-submit { background: var(--dark); color: #fff; border: none; border-radius: 8px;
+                padding: 14px 32px; font-size: .95rem; font-weight: 700;
+                cursor: pointer; width: 100%; transition: opacity .15s; }
+  .btn-submit:hover    { opacity: .85; }
+  .btn-submit:disabled { opacity: .5; cursor: not-allowed; }
+
+  /* ── Success screen ── */
+  #success-screen { display: none; }
+  .success-card { text-align: center; padding: 40px 28px; }
+  .success-icon { font-size: 3rem; margin-bottom: 16px; }
+  .success-card h2 { font-size: 1.3rem; margin-bottom: 8px; }
+  .success-card p  { color: var(--grey); font-size: .9rem; margin-bottom: 24px; }
+  .submission-id { background: #f0f4ff; border-radius: 6px; padding: 8px 16px;
+                   font-family: monospace; font-size: .85rem; color: var(--blue);
+                   display: inline-block; margin-bottom: 20px; }
+  .btn-pdf { background: var(--blue); color: #fff; text-decoration: none;
+             border-radius: 8px; padding: 13px 28px; font-weight: 700;
+             font-size: .9rem; display: inline-block; margin-right: 10px; }
+  .btn-again { background: #e8e8e8; color: var(--dark); border: none;
+               border-radius: 8px; padding: 13px 28px; font-weight: 600;
+               font-size: .9rem; cursor: pointer; }
+  .btn-again:hover { background: #d4d4d4; }
+
+  /* ── Back button ── */
+  .btn-back { display: inline-flex; align-items: center; gap: 7px;
+              background: var(--dark); color: #fff; text-decoration: none;
+              border-radius: 7px; padding: 8px 16px; font-size: .82rem;
+              font-weight: 600; transition: opacity .15s; }
+  .btn-back:hover { opacity: .78; }
+
+  /* ── Footer ── */
+  .site-footer { text-align: center; font-size: .75rem; color: var(--grey);
+                 padding: 20px; border-top: 1px solid var(--border); }
+
+  /* ── Other amount input ── */
+  .other-amt-wrap { display: none; margin-top: 10px; }
+  .other-amt-wrap input { width: 180px; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="logo">WLTH</span>
+  <a class="btn-back" href="http://localhost:8000">
+    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
+         viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/>
+      <polyline points="12 19 5 12 12 5"/></svg>
+    All Forms
+  </a>
+</header>
+
+<main>
+
+<!-- ═══════════════════════════ FORM ═══════════════════════════ -->
+<div id="form-screen">
+
+  <div class="card">
+    <h1 class="card-title">Direct Debit Request</h1>
+
+    <p style="font-size:.88rem;color:#444;line-height:1.6;margin-bottom:14px;">
+      The undersigned Borrower(s) hereby authorise WLTH Lend Pty Ltd to arrange for the set-up
+      of a direct debit on the nominated account(s) in connection with their mortgage loan.
+      Direct Debit ID No. <strong>460095</strong>.
+    </p>
+
+    <div class="info-banner">
+      <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2"
+           viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Direct Debit ID No. 460095 &nbsp;·&nbsp; Complete all required fields before submitting
+    </div>
+
+    <!-- Borrower count -->
+    <div class="selector-label">How many borrowers are on this loan?</div>
+    <div class="selector-row" id="borrower-selector">
+      <button class="sel-btn active" data-val="1" onclick="selectBorrowers(1)">
+        <span class="icon">👤</span>
+        <span class="label">1 Borrower</span>
+      </button>
+      <button class="sel-btn" data-val="2" onclick="selectBorrowers(2)">
+        <span class="icon">👥</span>
+        <span class="label">2 Borrowers</span>
+      </button>
+      <button class="sel-btn" data-val="3" onclick="selectBorrowers(3)">
+        <span class="icon">👥👤</span>
+        <span class="label">3 Borrowers</span>
+      </button>
+      <button class="sel-btn" data-val="4" onclick="selectBorrowers(4)">
+        <span class="icon">👥👥</span>
+        <span class="label">4 Borrowers</span>
+      </button>
+    </div>
+
+    <!-- Loan account number -->
+    <div class="section-title">Loan Details</div>
+    <div class="field" id="f-loan">
+      <label>Loan Account No. <span class="req">*</span></label>
+      <input type="text" id="loan-account" placeholder="e.g. 1234567" maxlength="50">
+      <div class="err-msg">This field is required</div>
+    </div>
+
+    <!-- ── Borrowers ── -->
+    <div class="section-title">Borrower Details</div>
+    <div id="borrowers-container">
+      <!-- injected by JS -->
+    </div>
+
+    <!-- ── Debit Accounts ── -->
+    <div class="section-title">Nominated Account(s)</div>
+    <div id="accounts-container">
+      <!-- injected by JS -->
+    </div>
+
+    <!-- Add account button -->
+    <div id="add-account-wrap" style="margin-bottom:16px;">
+      <button type="button" onclick="addAccount()"
+              style="background:none;border:1.5px dashed var(--border);border-radius:8px;
+                     padding:10px 20px;font-size:.85rem;color:var(--blue);cursor:pointer;width:100%;">
+        + Add another account
+      </button>
+    </div>
+
+    <!-- Comments -->
+    <div class="section-title" style="margin-top:16px;">
+      Comments <span style="font-weight:400;font-size:.85rem;color:var(--grey)">(optional)</span>
+    </div>
+    <div class="field">
+      <textarea id="comments" placeholder="Any additional information…" maxlength="500"></textarea>
+    </div>
+
+    <!-- ── Authorisations ── -->
+    <div class="section-title">Customer Authorisation</div>
+    <p style="font-size:.82rem;color:#444;margin-bottom:16px;line-height:1.6;">
+      I/we request WLTH to set up the above direct debit arrangement in connection with my/our
+      WLTH mortgage loan and acknowledge that this direct debit arrangement is governed by the
+      terms of the Client Service Agreement.
+    </p>
+    <div id="auth-container">
+      <!-- injected by JS -->
+    </div>
+
+    <!-- Submit -->
+    <div class="submit-area">
+      <div class="form-error-banner" id="form-error">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <span id="form-error-msg">This form contains errors and cannot be submitted. Please check your entries and try again.</span>
+      </div>
+      <button class="btn-submit" id="submit-btn" onclick="submitForm()">Submit</button>
+    </div>
+  </div>
+
+</div><!-- /form-screen -->
+
+
+<!-- ═══════════════════════════ SUCCESS ═══════════════════════════ -->
+<div id="success-screen">
+  <div class="card success-card">
+    <div class="success-icon">✅</div>
+    <h2>Form Submitted Successfully</h2>
+    <p>Your Direct Debit Request has been recorded. Download your completed PDF below.</p>
+    <div class="submission-id" id="success-id"></div>
+    <br>
+    <a class="btn-pdf" id="pdf-link" href="#" target="_blank">Download PDF</a>
+    <button class="btn-again" onclick="resetForm()">Submit Another Form</button>
+  </div>
+</div>
+
+
+</main>
+
+<footer class="site-footer">
+  Version 1.0 &nbsp;|&nbsp;
+  WLTH Lend Pty Ltd (CRN 525 873) as authorised by WLTH Pty Ltd (ACN 639 591 245 and AFSL and ACL 525 752)
+</footer>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────
+let borrowerCount = 1;
+let accountCount  = 1;
+const MAX_ACCOUNTS   = 4;
+const signatures     = {};  // key: 'auth-0', 'auth-1', …
+const bankStatements = {};  // key: account index → { base64, filename }
+
+// Persisted account data (for restore after removeAccount)
+// accountSaved[i] = { fi, br, ah, bsb, acc, freq, amtType, amtOther }
+let accountSaved = [];
+
+// ── Selectors ─────────────────────────────────────────────────────────────
+function selectBorrowers(n) {
+  borrowerCount = n;
+  document.querySelectorAll('#borrower-selector .sel-btn').forEach(b =>
+    b.classList.toggle('active', +b.dataset.val === n));
+  renderBorrowers();
+  renderAuths();
+}
+
+// ── Render: Borrowers ─────────────────────────────────────────────────────
+function renderBorrowers() {
+  const c = document.getElementById('borrowers-container');
+  c.innerHTML = '';
+  for (let i = 0; i < borrowerCount; i++) {
+    const label = borrowerCount > 1 ? `Borrower ${i + 1}` : 'Borrower';
+    c.innerHTML += `
+      <div style="margin-bottom:16px;">
+        <div style="font-size:.85rem;font-weight:600;color:var(--grey);margin-bottom:10px;">${label}</div>
+        <div class="row">
+          <div class="field" id="f-sur-${i}">
+            <label>Surname <span class="req">*</span></label>
+            <input type="text" id="sur-${i}" placeholder="Smith" maxlength="100">
+            <div class="err-msg">This field is required</div>
+          </div>
+          <div class="field" id="f-giv-${i}">
+            <label>Given Name(s) <span class="req">*</span></label>
+            <input type="text" id="giv-${i}" placeholder="Jane" maxlength="100">
+            <div class="err-msg">This field is required</div>
+          </div>
+        </div>
+      </div>`;
+  }
+}
+
+// ── Render: Accounts ──────────────────────────────────────────────────────
+function renderAccounts() {
+  const c = document.getElementById('accounts-container');
+  c.innerHTML = '';
+  for (let i = 0; i < accountCount; i++) {
+    const label = accountCount > 1 ? `Account ${i + 1}` : 'Account';
+    const removeBtn = accountCount > 1
+      ? `<button type="button" onclick="removeAccount(${i})"
+           style="background:none;border:none;color:var(--red);font-size:.8rem;font-weight:600;
+                  cursor:pointer;padding:4px 8px;border-radius:4px;white-space:nowrap;"
+           onmouseover="this.style.background='#fff0f0'"
+           onmouseout="this.style.background='none'">✕ Remove</button>`
+      : '';
+    c.innerHTML += `
+      <div class="account-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;">
+          <div class="account-card-title" style="margin-bottom:0;">${label}</div>
+          ${removeBtn}
+        </div>
+        <div class="row">
+          <div class="field" id="f-fi-${i}">
+            <label>Financial Institution <span class="req">*</span></label>
+            <input type="text" id="fi-${i}" placeholder="e.g. Commonwealth Bank" maxlength="100">
+            <div class="err-msg">This field is required</div>
+          </div>
+          <div class="field" id="f-br-${i}">
+            <label>Branch <span class="req">*</span></label>
+            <input type="text" id="br-${i}" placeholder="e.g. Sydney CBD" maxlength="100">
+            <div class="err-msg">This field is required</div>
+          </div>
+        </div>
+        <div class="field" id="f-ah-${i}">
+          <label>Account Holders / Account Title <span class="req">*</span></label>
+          <input type="text" id="ah-${i}" placeholder="e.g. Jane Smith & John Smith" maxlength="200">
+          <div class="err-msg">This field is required</div>
+        </div>
+        <div class="row">
+          <div class="field" id="f-bsb-${i}">
+            <label>BSB No. <span class="req">*</span></label>
+            <input type="text" id="bsb-${i}" placeholder="123-456" maxlength="7"
+                   oninput="formatBSB(this)">
+            <div class="err-msg" id="bsb-err-${i}">Please enter a valid BSB (e.g. 123-456)</div>
+          </div>
+          <div class="field" id="f-acc-${i}">
+            <label>Account No. <span class="req">*</span></label>
+            <input type="text" id="acc-${i}" placeholder="12345678" maxlength="12">
+            <div class="err-msg" id="acc-err-${i}">Please enter a valid account number</div>
+          </div>
+        </div>
+
+        <!-- Bank Statement -->
+        <div class="field" id="f-bs-${i}">
+          <label>Bank Statement <span class="req">*</span></label>
+          <div class="file-upload-row">
+            <button type="button" class="file-btn"
+                    onclick="document.getElementById('bs-file-${i}').click()">Choose File</button>
+            <input type="file" id="bs-file-${i}" accept=".pdf,.jpg,.jpeg,.png" style="display:none"
+                   onchange="handleFileSelect(event,${i})">
+            <span class="file-name" id="bs-name-${i}">No file chosen</span>
+            <button type="button" class="file-remove-btn" id="bs-remove-${i}"
+                    style="display:none" onclick="removeFile(${i})">✕ Remove</button>
+          </div>
+          <div class="file-hint">Accepted: PDF, JPG, PNG &nbsp;·&nbsp; Max 10 MB</div>
+          <div class="err-msg" id="bs-err-${i}">Please upload a bank statement</div>
+        </div>
+
+        <!-- Payment Frequency -->
+        <div class="field" id="f-freq-${i}">
+          <label>Payment Frequency <span class="req">*</span></label>
+          <div class="toggle-row">
+            <label class="toggle-opt">
+              <input type="radio" name="freq-${i}" value="weekly">
+              <span>Weekly</span>
+            </label>
+            <label class="toggle-opt">
+              <input type="radio" name="freq-${i}" value="fortnightly">
+              <span>Fortnightly</span>
+            </label>
+            <label class="toggle-opt">
+              <input type="radio" name="freq-${i}" value="monthly">
+              <span>Monthly</span>
+            </label>
+          </div>
+          <div class="err-msg" id="freq-err-${i}">Please select a payment frequency</div>
+        </div>
+
+        <!-- Repayment Amount -->
+        <div class="field" id="f-amt-${i}">
+          <label>Repayment Amount <span class="req">*</span></label>
+          <div class="toggle-row">
+            <label class="toggle-opt">
+              <input type="radio" name="amt-type-${i}" value="minimum" onchange="onAmtTypeChange(${i})">
+              <span>Minimum Required</span>
+            </label>
+            <label class="toggle-opt">
+              <input type="radio" name="amt-type-${i}" value="other" onchange="onAmtTypeChange(${i})">
+              <span>Other $:</span>
+            </label>
+          </div>
+          <div class="other-amt-wrap" id="other-amt-wrap-${i}">
+            <input type="number" id="amt-other-${i}" placeholder="Enter amount" min="0.01" step="0.01">
+          </div>
+          <div class="err-msg" id="amt-err-${i}">Please select a repayment amount type</div>
+        </div>
+      </div>`;
+  }
+}
+
+function addAccount() {
+  if (accountCount >= MAX_ACCOUNTS) return;
+  accountCount++;
+  renderAccounts();
+  if (accountCount >= MAX_ACCOUNTS)
+    document.getElementById('add-account-wrap').style.display = 'none';
+}
+
+// ── File upload ───────────────────────────────────────────────────────────
+function handleFileSelect(e, i) {
+  const file = e.target.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) {
+    alert('File size must be under 10 MB. Please choose a smaller file.');
+    e.target.value = '';
+    return;
+  }
+  const reader = new FileReader();
+  reader.onload = ev => {
+    bankStatements[i] = { base64: ev.target.result, filename: file.name };
+    const nameEl = document.getElementById(`bs-name-${i}`);
+    nameEl.textContent = `${file.name} (${(file.size / 1024).toFixed(0)} KB)`;
+    nameEl.className = 'file-name selected';
+    const removeBtn = document.getElementById(`bs-remove-${i}`);
+    if (removeBtn) removeBtn.style.display = 'inline-block';
+    clearFieldError(`f-bs-${i}`);
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeFile(i) {
+  delete bankStatements[i];
+  const fileInput = document.getElementById(`bs-file-${i}`);
+  if (fileInput) fileInput.value = '';
+  const nameEl = document.getElementById(`bs-name-${i}`);
+  if (nameEl) { nameEl.textContent = 'No file chosen'; nameEl.className = 'file-name'; }
+  const removeBtn = document.getElementById(`bs-remove-${i}`);
+  if (removeBtn) removeBtn.style.display = 'none';
+  setFieldError(`f-bs-${i}`, 'Please upload a bank statement');
+}
+
+// ── Amount type toggle ────────────────────────────────────────────────────
+function onAmtTypeChange(i) {
+  const radios = document.querySelectorAll(`input[name="amt-type-${i}"]`);
+  let selected = '';
+  radios.forEach(r => { if (r.checked) selected = r.value; });
+  const wrap = document.getElementById(`other-amt-wrap-${i}`);
+  if (wrap) wrap.style.display = selected === 'other' ? 'block' : 'none';
+  clearFieldError(`f-amt-${i}`);
+}
+
+// ── Collect account data (for save/restore) ───────────────────────────────
+function collectAccountData() {
+  const data = [];
+  for (let i = 0; i < accountCount; i++) {
+    const freqRadios = document.querySelectorAll(`input[name="freq-${i}"]`);
+    let freq = '';
+    freqRadios.forEach(r => { if (r.checked) freq = r.value; });
+
+    const amtRadios = document.querySelectorAll(`input[name="amt-type-${i}"]`);
+    let amtType = '';
+    amtRadios.forEach(r => { if (r.checked) amtType = r.value; });
+
+    data.push({
+      fi:       document.getElementById(`fi-${i}`)?.value  || '',
+      br:       document.getElementById(`br-${i}`)?.value  || '',
+      ah:       document.getElementById(`ah-${i}`)?.value  || '',
+      bsb:      document.getElementById(`bsb-${i}`)?.value || '',
+      acc:      document.getElementById(`acc-${i}`)?.value || '',
+      freq:     freq,
+      amtType:  amtType,
+      amtOther: document.getElementById(`amt-other-${i}`)?.value || '',
+      bs:       bankStatements[i] || null,
+    });
+  }
+  return data;
+}
+
+function removeAccount(idx) {
+  if (accountCount <= 1) return;
+  const saved = collectAccountData();
+  saved.splice(idx, 1);
+  // Re-index bank statements around the removed slot
+  const shifted = {};
+  for (let i = 0; i < accountCount; i++) {
+    if (i < idx && bankStatements[i])      shifted[i]     = bankStatements[i];
+    else if (i > idx && bankStatements[i]) shifted[i - 1] = bankStatements[i];
+  }
+  Object.keys(bankStatements).forEach(k => delete bankStatements[k]);
+  Object.assign(bankStatements, shifted);
+  accountCount--;
+  renderAccounts();
+  document.getElementById('add-account-wrap').style.display = 'block';
+
+  // Restore field values, radios, and file displays
+  saved.forEach((d, i) => {
+    document.getElementById(`fi-${i}`).value  = d.fi;
+    document.getElementById(`br-${i}`).value  = d.br;
+    document.getElementById(`ah-${i}`).value  = d.ah;
+    document.getElementById(`bsb-${i}`).value = d.bsb;
+    document.getElementById(`acc-${i}`).value = d.acc;
+
+    if (d.freq) {
+      const freqRadio = document.querySelector(`input[name="freq-${i}"][value="${d.freq}"]`);
+      if (freqRadio) freqRadio.checked = true;
+    }
+    if (d.amtType) {
+      const amtRadio = document.querySelector(`input[name="amt-type-${i}"][value="${d.amtType}"]`);
+      if (amtRadio) amtRadio.checked = true;
+      const wrap = document.getElementById(`other-amt-wrap-${i}`);
+      if (wrap) wrap.style.display = d.amtType === 'other' ? 'block' : 'none';
+      if (d.amtType === 'other' && d.amtOther) {
+        const otherInput = document.getElementById(`amt-other-${i}`);
+        if (otherInput) otherInput.value = d.amtOther;
+      }
+    }
+    if (bankStatements[i]) {
+      const nameEl = document.getElementById(`bs-name-${i}`);
+      if (nameEl) { nameEl.textContent = bankStatements[i].filename; nameEl.className = 'file-name selected'; }
+      const removeBtn = document.getElementById(`bs-remove-${i}`);
+      if (removeBtn) removeBtn.style.display = 'inline-block';
+    }
+  });
+}
+
+// ── Render: Authorisations ────────────────────────────────────────────────
+function renderAuths() {
+  const c = document.getElementById('auth-container');
+  c.innerHTML = '';
+  for (let i = 0; i < borrowerCount; i++) {
+    const label = borrowerCount > 1 ? `Borrower ${i + 1} Authorisation` : 'Customer Authorisation';
+    c.innerHTML += `
+      <div class="account-card" style="margin-bottom:20px;">
+        <div class="account-card-title">${label}</div>
+
+        <div class="field" id="f-sig-${i}">
+          <label>Signature <span class="req">*</span></label>
+          <div class="sig-wrap">
+            <canvas class="sig-canvas" id="sig-canvas-${i}" width="560" height="160"
+                    onmousedown="startDraw(event,${i})"
+                    onmousemove="draw(event,${i})"
+                    onmouseup="stopDraw(${i})"
+                    onmouseleave="stopDraw(${i})"
+                    ontouchstart="startDraw(event,${i})"
+                    ontouchmove="draw(event,${i})"
+                    ontouchend="stopDraw(${i})"></canvas>
+          </div>
+          <div class="sig-btns">
+            <button type="button" class="btn-sign" onclick="confirmSig(${i})">Sign</button>
+            <button type="button" class="btn-clear" onclick="clearSig(${i})">Clear</button>
+          </div>
+          <div class="sig-status" id="sig-status-${i}">Draw your signature above then press Sign</div>
+          <div class="err-msg" id="sig-err-${i}">This field is required. Please ensure you have pressed the Sign button.</div>
+        </div>
+
+        <div class="row">
+          <div class="field" id="f-hc-${i}">
+            <label>Home Contact No.</label>
+            <input type="tel" id="hc-${i}" placeholder="02 1234 5678" maxlength="20">
+            <div class="err-msg">Please enter a valid phone number</div>
+          </div>
+          <div class="field" id="f-wc-${i}">
+            <label>Work Contact No.</label>
+            <input type="tel" id="wc-${i}" placeholder="02 9876 5432" maxlength="20">
+            <div class="err-msg">Please enter a valid phone number</div>
+          </div>
+        </div>
+
+        <div class="field" id="f-dt-${i}">
+          <label>Date <span class="req">*</span></label>
+          <input type="date" id="dt-${i}" value="${today()}">
+          <div class="err-msg">This field is required</div>
+        </div>
+      </div>`;
+
+    // Re-init drawing state (only reset started flag on fresh render)
+    drawingState[i] = { drawing: false };
+    signatures[`auth-${i}`] = null;
+    setTimeout(() => drawPlaceholder(i), 0);
+  }
+}
+
+// ── Canvas drawing ────────────────────────────────────────────────────────
+const drawingState = {};
+
+function getPos(e, canvas) {
+  const r = canvas.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - r.left, y: src.clientY - r.top };
+}
+
+function startDraw(e, i) {
+  e.preventDefault();
+  const canvas = document.getElementById(`sig-canvas-${i}`);
+  const ctx = canvas.getContext('2d');
+  const pos = getPos(e, canvas);
+  // Only clear the placeholder on the very first stroke — never on subsequent ones
+  if (!drawingState[i].started) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawingState[i].started = true;
+  }
+  drawingState[i].drawing = true;
+  ctx.beginPath();
+  ctx.moveTo(pos.x, pos.y);
+  ctx.strokeStyle = '#1a1a2e';
+  ctx.lineWidth = 2;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+}
+
+function draw(e, i) {
+  e.preventDefault();
+  if (!drawingState[i]?.drawing) return;
+  const canvas = document.getElementById(`sig-canvas-${i}`);
+  const ctx = canvas.getContext('2d');
+  const pos = getPos(e, canvas);
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
+}
+
+function stopDraw(i) {
+  if (drawingState[i]) drawingState[i].drawing = false;
+}
+
+function confirmSig(i) {
+  const canvas = document.getElementById(`sig-canvas-${i}`);
+  signatures[`auth-${i}`] = canvas.toDataURL('image/png');
+  const el = document.getElementById(`sig-status-${i}`);
+  el.textContent = '✓ Signature captured';
+  el.className = 'sig-status ok';
+  clearFieldError(`f-sig-${i}`);
+}
+
+function clearSig(i) {
+  const canvas = document.getElementById(`sig-canvas-${i}`);
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawingState[i] = { drawing: false };
+  signatures[`auth-${i}`] = null;
+  const el = document.getElementById(`sig-status-${i}`);
+  el.textContent = 'Draw your signature above then press Sign';
+  el.className = 'sig-status';
+  drawPlaceholder(i);
+}
+
+function drawPlaceholder(i) {
+  const canvas = document.getElementById(`sig-canvas-${i}`);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.font = '14px -apple-system, sans-serif';
+  ctx.fillStyle = '#bbb';
+  ctx.fillText('Sign here…', 16, canvas.height / 2 + 5);
+}
+
+// ── BSB auto-format ───────────────────────────────────────────────────────
+function formatBSB(input) {
+  let v = input.value.replace(/\D/g, '').slice(0, 6);
+  if (v.length > 3) v = v.slice(0, 3) + '-' + v.slice(3);
+  input.value = v;
+}
+
+// ── Validation helpers ────────────────────────────────────────────────────
+function setFieldError(id, msg) {
+  const f = document.getElementById(id);
+  if (!f) return;
+  f.classList.add('error');
+  if (msg) {
+    const e = f.querySelector('.err-msg');
+    if (e) e.textContent = msg;
+  }
+}
+function clearFieldError(id) {
+  const f = document.getElementById(id);
+  if (f) f.classList.remove('error');
+}
+function req(id, fieldId) {
+  const el = document.getElementById(id);
+  if (!el || !el.value.trim()) { setFieldError(fieldId, null); return false; }
+  clearFieldError(fieldId); return true;
+}
+
+function validateBSB(i) {
+  const v = (document.getElementById(`bsb-${i}`)?.value || '').replace(/\D/g, '');
+  if (v.length !== 6) { setFieldError(`f-bsb-${i}`, 'Please enter a valid BSB (e.g. 123-456)'); return false; }
+  clearFieldError(`f-bsb-${i}`); return true;
+}
+
+function validateAccNum(i) {
+  const v = (document.getElementById(`acc-${i}`)?.value || '').replace(/\D/g, '');
+  if (v.length < 4 || v.length > 12) { setFieldError(`f-acc-${i}`, 'Please enter a valid account number (4–12 digits)'); return false; }
+  clearFieldError(`f-acc-${i}`); return true;
+}
+
+function validatePhone(id, fieldId) {
+  const v = document.getElementById(id)?.value?.trim();
+  if (!v) return true; // optional
+  const digits = v.replace(/[\s\-\(\)\+]/g, '');
+  if (!(/^\d+$/.test(digits)) || digits.length < 8) { setFieldError(fieldId, 'Please enter a valid phone number'); return false; }
+  clearFieldError(fieldId); return true;
+}
+
+function validateFrequency(i) {
+  const radios = document.querySelectorAll(`input[name="freq-${i}"]`);
+  let checked = false;
+  radios.forEach(r => { if (r.checked) checked = true; });
+  if (!checked) {
+    setFieldError(`f-freq-${i}`, 'Please select a payment frequency');
+    return false;
+  }
+  clearFieldError(`f-freq-${i}`);
+  return true;
+}
+
+function validateAmountType(i) {
+  const radios = document.querySelectorAll(`input[name="amt-type-${i}"]`);
+  let selected = '';
+  radios.forEach(r => { if (r.checked) selected = r.value; });
+  if (!selected) {
+    setFieldError(`f-amt-${i}`, 'Please select a repayment amount type');
+    return false;
+  }
+  if (selected === 'other') {
+    const v = parseFloat(document.getElementById(`amt-other-${i}`)?.value || '');
+    if (isNaN(v) || v <= 0) {
+      setFieldError(`f-amt-${i}`, 'Please enter a valid amount greater than $0');
+      return false;
+    }
+  }
+  clearFieldError(`f-amt-${i}`);
+  return true;
+}
+
+// ── Full validation ───────────────────────────────────────────────────────
+function validate() {
+  let ok = true;
+
+  if (!req('loan-account', 'f-loan')) ok = false;
+
+  for (let i = 0; i < borrowerCount; i++) {
+    if (!req(`sur-${i}`, `f-sur-${i}`)) ok = false;
+    if (!req(`giv-${i}`, `f-giv-${i}`)) ok = false;
+  }
+
+  for (let i = 0; i < accountCount; i++) {
+    if (!req(`fi-${i}`,  `f-fi-${i}`))  ok = false;
+    if (!req(`br-${i}`,  `f-br-${i}`))  ok = false;
+    if (!req(`ah-${i}`,  `f-ah-${i}`))  ok = false;
+    if (!validateBSB(i))          ok = false;
+    if (!validateAccNum(i))       ok = false;
+    if (!validateFrequency(i))    ok = false;
+    if (!validateAmountType(i))   ok = false;
+    if (!bankStatements[i]) { setFieldError(`f-bs-${i}`, 'Please upload a bank statement'); ok = false; }
+    else clearFieldError(`f-bs-${i}`);
+  }
+
+  for (let i = 0; i < borrowerCount; i++) {
+    if (!signatures[`auth-${i}`]) {
+      document.getElementById(`f-sig-${i}`).classList.add('error');
+      const em = document.getElementById(`sig-err-${i}`);
+      if (em) em.style.display = 'flex';
+      ok = false;
+    } else {
+      document.getElementById(`f-sig-${i}`).classList.remove('error');
+      const em = document.getElementById(`sig-err-${i}`);
+      if (em) em.style.display = 'none';
+    }
+    if (!validatePhone(`hc-${i}`, `f-hc-${i}`)) ok = false;
+    if (!validatePhone(`wc-${i}`, `f-wc-${i}`)) ok = false;
+    if (!req(`dt-${i}`, `f-dt-${i}`)) ok = false;
+  }
+
+  return ok;
+}
+
+// ── Collect form data ─────────────────────────────────────────────────────
+function collectData() {
+  const borrowers = [];
+  for (let i = 0; i < borrowerCount; i++) {
+    borrowers.push({
+      surname:     document.getElementById(`sur-${i}`).value.trim(),
+      given_names: document.getElementById(`giv-${i}`).value.trim(),
+    });
+  }
+
+  const debit_accounts = [];
+  for (let i = 0; i < accountCount; i++) {
+    const freqRadios = document.querySelectorAll(`input[name="freq-${i}"]`);
+    let freq = '';
+    freqRadios.forEach(r => { if (r.checked) freq = r.value; });
+
+    const amtRadios = document.querySelectorAll(`input[name="amt-type-${i}"]`);
+    let amtType = '';
+    amtRadios.forEach(r => { if (r.checked) amtType = r.value; });
+
+    const amtOther = amtType === 'other'
+      ? parseFloat(document.getElementById(`amt-other-${i}`)?.value || '0')
+      : null;
+
+    debit_accounts.push({
+      financial_institution: document.getElementById(`fi-${i}`).value.trim(),
+      branch:                document.getElementById(`br-${i}`).value.trim(),
+      account_holders:       document.getElementById(`ah-${i}`).value.trim(),
+      bsb_number:            document.getElementById(`bsb-${i}`).value.trim(),
+      account_number:        document.getElementById(`acc-${i}`).value.trim(),
+      payment_frequency:       freq,
+      amount_type:             amtType,
+      amount_other:            amtOther,
+      bank_statement_base64:   bankStatements[i]?.base64   || '',
+      bank_statement_filename: bankStatements[i]?.filename || '',
+    });
+  }
+
+  const authorisations = [];
+  for (let i = 0; i < borrowerCount; i++) {
+    authorisations.push({
+      signature_base64: signatures[`auth-${i}`],
+      home_contact:     document.getElementById(`hc-${i}`).value.trim() || null,
+      work_contact:     document.getElementById(`wc-${i}`).value.trim() || null,
+      signed_date:      document.getElementById(`dt-${i}`).value,
+    });
+  }
+
+  return {
+    loan_account_number: document.getElementById('loan-account').value.trim(),
+    borrowers,
+    debit_accounts,
+    comments: document.getElementById('comments').value.trim() || null,
+    authorisations,
+  };
+}
+
+// ── Submit ────────────────────────────────────────────────────────────────
+async function submitForm() {
+  const banner = document.getElementById('form-error');
+  banner.classList.remove('show');
+
+  if (!validate()) {
+    banner.classList.add('show');
+    banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    const res = await fetch('/api/v1/submissions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(collectData()),
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      const detail = Array.isArray(err.detail)
+        ? err.detail.map(d => d.msg).join(', ')
+        : (err.detail || 'Submission failed');
+      throw new Error(detail);
+    }
+
+    const data = await res.json();
+    document.getElementById('success-id').textContent = `Submission ID: ${data.id}`;
+    document.getElementById('pdf-link').href = data.pdf_url;
+    document.getElementById('form-screen').style.display = 'none';
+    document.getElementById('success-screen').style.display = 'block';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  } catch (e) {
+    document.getElementById('form-error-msg').textContent = e.message;
+    banner.classList.add('show');
+    banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit';
+  }
+}
+
+// ── Reset ─────────────────────────────────────────────────────────────────
+function resetForm() {
+  borrowerCount = 1;
+  accountCount  = 1;
+  Object.keys(signatures).forEach(k => delete signatures[k]);
+  Object.keys(bankStatements).forEach(k => delete bankStatements[k]);
+
+  document.getElementById('success-screen').style.display = 'none';
+  document.getElementById('form-screen').style.display   = 'block';
+  document.getElementById('loan-account').value = '';
+  document.getElementById('comments').value = '';
+  document.getElementById('form-error').classList.remove('show');
+
+  document.querySelectorAll('#borrower-selector .sel-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.val === '1'));
+  document.getElementById('add-account-wrap').style.display = 'block';
+
+  renderBorrowers();
+  renderAccounts();
+  renderAuths();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Utility ───────────────────────────────────────────────────────────────
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// ── Init ──────────────────────────────────────────────────────────────────
+renderBorrowers();
+renderAccounts();
+renderAuths();
+</script>
+</body>
+</html>

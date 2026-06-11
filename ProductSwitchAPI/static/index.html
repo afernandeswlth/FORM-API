@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>WLTH – Product Switch Request</title>
+<style>
+  :root {
+    --dark: #1a1a2e;
+    --blue: #1565C0;
+    --light-blue: #e8f0fe;
+    --grey: #f4f4f6;
+    --border: #d0d5dd;
+    --text: #1a1a2e;
+    --muted: #667085;
+    --error: #d32f2f;
+    --success: #2e7d32;
+    --radius: 10px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #f0f2f5;
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--dark);
+    color: #fff;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  header .logo { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+  header .subtitle { font-size: 13px; opacity: 0.7; }
+  .btn-back {
+    margin-left: auto;
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.25);
+    padding: 7px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .btn-back:hover { background: rgba(255,255,255,0.22); }
+
+  /* ── Layout ── */
+  .container { max-width: 780px; margin: 32px auto; padding: 0 16px; }
+  .form-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .form-desc { font-size: 14px; color: var(--muted); margin-bottom: 28px; }
+
+  /* ── Cards ── */
+  .card {
+    background: #fff;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title .badge {
+    background: var(--dark);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+  }
+
+  /* ── Borrower selector ── */
+  .borrower-selector {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .borrower-selector label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .borrower-selector input[type="radio"] { display: none; }
+  .borrower-selector input:checked + span { font-weight: 700; }
+  .borrower-selector label:has(input:checked) {
+    border-color: var(--dark);
+    background: var(--dark);
+    color: #fff;
+  }
+
+  /* ── Fields ── */
+  .field-row { display: flex; gap: 14px; margin-bottom: 14px; flex-wrap: wrap; }
+  .field { flex: 1; min-width: 140px; }
+  .field label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+    font-family: inherit;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--dark); }
+  .field.error input, .field.error select, .field.error textarea { border-color: var(--error); }
+  .field .err-msg { font-size: 11px; color: var(--error); margin-top: 3px; display: none; }
+  .field.error .err-msg { display: block; }
+
+  /* ── Toggle radios ── */
+  .toggle-label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+  .toggle-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .toggle-opt { position: relative; }
+  .toggle-opt input[type="radio"] { display: none; }
+  .toggle-opt span {
+    display: block;
+    padding: 8px 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+    white-space: nowrap;
+  }
+  .toggle-opt input:checked + span {
+    background: var(--dark);
+    color: #fff;
+    border-color: var(--dark);
+  }
+  .toggle-opt span:hover { border-color: var(--dark); }
+
+  /* ── Loan switch cards ── */
+  .switch-card {
+    background: var(--grey);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .switch-card-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 14px;
+  }
+  .btn-remove-switch {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: none;
+    border: 1px solid var(--error);
+    color: var(--error);
+    border-radius: 6px;
+    font-size: 12px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-remove-switch:hover { background: var(--error); color: #fff; }
+
+  .conditional-field {
+    display: none;
+    flex: 1;
+    min-width: 140px;
+  }
+  .conditional-field.visible { display: flex; flex-direction: column; }
+
+  /* ── Add switch button ── */
+  .btn-add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: 2px dashed var(--border);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+    transition: all 0.15s;
+    margin-top: 4px;
+  }
+  .btn-add:hover { border-color: var(--dark); color: var(--dark); }
+  .btn-add:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── Signature canvas ── */
+  .sig-wrap { position: relative; margin-bottom: 6px; }
+  canvas.sig-canvas {
+    display: block;
+    width: 100%;
+    height: 120px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: #fff;
+    cursor: crosshair;
+    touch-action: none;
+  }
+  canvas.sig-canvas.error { border-color: var(--error); }
+  .sig-clear {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    border-radius: 5px;
+    font-size: 11px;
+    padding: 3px 8px;
+    cursor: pointer;
+  }
+  .sig-clear:hover { border-color: var(--dark); color: var(--dark); }
+  .sig-label { font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 6px; }
+
+  /* ── Borrower auth cards ── */
+  .auth-card {
+    background: var(--grey);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    margin-bottom: 14px;
+  }
+  .auth-card-title { font-size: 13px; font-weight: 700; color: var(--dark); margin-bottom: 14px; }
+
+  /* ── Submit ── */
+  .btn-submit {
+    width: 100%;
+    padding: 15px;
+    background: var(--dark);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+  .btn-submit:hover { opacity: 0.88; }
+  .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── Toast ── */
+  #toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--dark);
+    color: #fff;
+    padding: 14px 28px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    z-index: 9999;
+    text-align: center;
+    max-width: 90vw;
+  }
+  #toast.show { transform: translateX(-50%) translateY(0); }
+  #toast.success { background: var(--success); }
+  #toast.error { background: var(--error); }
+
+  /* ── Success overlay ── */
+  #success-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+  }
+  #success-overlay.show { display: flex; }
+  .success-box {
+    background: #fff;
+    border-radius: 14px;
+    padding: 40px 36px;
+    max-width: 420px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+  }
+  .success-box .icon { font-size: 48px; margin-bottom: 16px; }
+  .success-box h2 { font-size: 20px; margin-bottom: 10px; color: var(--dark); }
+  .success-box p { font-size: 14px; color: var(--muted); margin-bottom: 20px; line-height: 1.5; }
+  .success-box .ref { font-size: 12px; font-family: monospace; color: var(--dark); background: var(--grey); padding: 8px 14px; border-radius: 6px; display: inline-block; margin-bottom: 20px; }
+  .success-box .btn-new {
+    background: var(--dark);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 28px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo">WLTH</div>
+    <div class="subtitle">Product Switch Request</div>
+  </div>
+  <a class="btn-back" href="http://localhost:8000">← All Forms</a>
+</header>
+
+<div class="container">
+  <div class="form-title">Product Switch Request</div>
+  <div class="form-desc">Switch the repayment type or interest rate type on your existing WLTH loan(s).</div>
+
+  <!-- ── Section 1: Borrowers ── -->
+  <div class="card">
+    <div class="card-title">Borrower Details</div>
+
+    <div style="margin-bottom:14px;">
+      <span class="toggle-label">Number of Borrowers</span>
+      <div class="borrower-selector" id="borrower-count-selector">
+        <label><input type="radio" name="borrower-count" value="1" checked onchange="setBorrowerCount(1)"><span>1 Borrower</span></label>
+        <label><input type="radio" name="borrower-count" value="2" onchange="setBorrowerCount(2)"><span>2 Borrowers</span></label>
+        <label><input type="radio" name="borrower-count" value="3" onchange="setBorrowerCount(3)"><span>3 Borrowers</span></label>
+        <label><input type="radio" name="borrower-count" value="4" onchange="setBorrowerCount(4)"><span>4 Borrowers</span></label>
+      </div>
+    </div>
+
+    <div id="borrowers-container"></div>
+  </div>
+
+  <!-- ── Section 2: Loan Switches ── -->
+  <div class="card">
+    <div class="card-title">
+      Loan Switch Details
+      <span class="badge" id="switch-count-badge">1 of 3</span>
+    </div>
+
+    <div id="switches-container"></div>
+
+    <button class="btn-add" id="btn-add-switch" onclick="addSwitch()">
+      + Add Another Loan
+    </button>
+  </div>
+
+  <!-- ── Section 3: Reason ── -->
+  <div class="card">
+    <div class="card-title">Reason for Request <span style="font-size:12px;font-weight:400;color:var(--muted)">(Optional)</span></div>
+    <div class="field">
+      <textarea id="reason-input" rows="3" maxlength="1000" placeholder="Briefly describe why you're requesting this product switch…" style="resize:vertical;"></textarea>
+    </div>
+  </div>
+
+  <!-- ── Section 4: Customer Authorisation ── -->
+  <div class="card">
+    <div class="card-title">Customer Authorisation</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:18px;line-height:1.6;">
+      I/we authorise the product switch request above and confirm the information is accurate and complete.
+      I/we acknowledge that break costs or other fees may apply.
+    </p>
+    <div id="auth-container"></div>
+  </div>
+
+  <button class="btn-submit" id="btn-submit" onclick="submitForm()">Submit Product Switch Request</button>
+</div>
+
+<!-- Toast -->
+<div id="toast"></div>
+
+<!-- Success overlay -->
+<div id="success-overlay">
+  <div class="success-box">
+    <div class="icon">✅</div>
+    <h2>Request Submitted</h2>
+    <p>Your Product Switch Request has been received and sent to the WLTH team.</p>
+    <div class="ref" id="success-ref"></div>
+    <br>
+    <button class="btn-new" onclick="resetForm()">Submit Another Request</button>
+  </div>
+</div>
+
+<script>
+// ── State ──────────────────────────────────────────────────────────────────
+let borrowerCount = 1;
+let switchCount   = 1;
+const MAX_SWITCHES = 3;
+
+// signature state: { drawing, started, lastX, lastY }
+const drawingState = {};
+const signatureData = {};  // { borrowerIdx: base64DataURI }
+
+// ── Init ───────────────────────────────────────────────────────────────────
+window.onload = () => {
+  renderBorrowers();
+  renderSwitches();
+  renderAuthCards();
+};
+
+// ── Borrowers ──────────────────────────────────────────────────────────────
+function setBorrowerCount(n) {
+  borrowerCount = n;
+  renderBorrowers();
+  renderAuthCards();
+}
+
+function renderBorrowers() {
+  const c = document.getElementById('borrowers-container');
+  c.innerHTML = '';
+  for (let i = 0; i < borrowerCount; i++) {
+    c.innerHTML += `
+      <div class="field-row">
+        <div class="field" id="field-surname-${i}">
+          <label>Borrower ${i+1} – Surname *</label>
+          <input type="text" id="surname-${i}" placeholder="Smith" oninput="clearErr('field-surname-${i}')">
+          <div class="err-msg">Required</div>
+        </div>
+        <div class="field" id="field-given-${i}">
+          <label>Borrower ${i+1} – Given Name(s) *</label>
+          <input type="text" id="given-${i}" placeholder="Jane" oninput="clearErr('field-given-${i}')">
+          <div class="err-msg">Required</div>
+        </div>
+      </div>`;
+  }
+}
+
+// ── Loan Switches ──────────────────────────────────────────────────────────
+function renderSwitches() {
+  const c = document.getElementById('switches-container');
+  c.innerHTML = '';
+  for (let i = 0; i < switchCount; i++) {
+    c.innerHTML += buildSwitchCard(i);
+  }
+  updateSwitchBadge();
+  updateAddSwitchBtn();
+}
+
+function buildSwitchCard(i) {
+  return `
+    <div class="switch-card" id="switch-card-${i}">
+      <div class="switch-card-title">Loan ${i+1}</div>
+      ${i > 0 ? `<button class="btn-remove-switch" onclick="removeSwitch(${i})">Remove</button>` : ''}
+
+      <div class="field-row">
+        <div class="field" id="field-loan-${i}">
+          <label>Loan Account Number *</label>
+          <input type="text" id="loan-acc-${i}" placeholder="e.g. 1234567890" oninput="clearErr('field-loan-${i}')">
+          <div class="err-msg">Required</div>
+        </div>
+      </div>
+
+      <div class="field-row" style="margin-bottom:8px;">
+        <div style="flex:1;min-width:140px;">
+          <span class="toggle-label">Repayment Type *</span>
+          <div class="toggle-row" id="repayment-toggle-${i}">
+            <label class="toggle-opt">
+              <input type="radio" name="repayment-${i}" value="principal_and_interest" checked
+                     onchange="onRepaymentChange(${i})">
+              <span>Principal &amp; Interest</span>
+            </label>
+            <label class="toggle-opt">
+              <input type="radio" name="repayment-${i}" value="interest_only"
+                     onchange="onRepaymentChange(${i})">
+              <span>Interest Only</span>
+            </label>
+          </div>
+          <div id="io-years-wrap-${i}" class="conditional-field" style="margin-top:10px;flex-direction:column;">
+            <div class="field" id="field-io-years-${i}" style="min-width:unset;">
+              <label>Interest Only Term (years) *</label>
+              <input type="number" id="io-years-${i}" placeholder="e.g. 5" min="1" max="10"
+                     oninput="clearErr('field-io-years-${i}')">
+              <div class="err-msg">Required for Interest Only</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="flex:1;min-width:140px;">
+          <span class="toggle-label">Rate Type *</span>
+          <div class="toggle-row" id="rate-toggle-${i}">
+            <label class="toggle-opt">
+              <input type="radio" name="rate-${i}" value="variable" checked
+                     onchange="onRateChange(${i})">
+              <span>Variable</span>
+            </label>
+            <label class="toggle-opt">
+              <input type="radio" name="rate-${i}" value="fixed"
+                     onchange="onRateChange(${i})">
+              <span>Fixed</span>
+            </label>
+          </div>
+          <div id="fixed-wrap-${i}" style="display:none;margin-top:10px;">
+            <div class="field-row" style="margin-bottom:0;">
+              <div class="field" id="field-fixed-rate-${i}" style="min-width:100px;">
+                <label>Fixed Rate (%) *</label>
+                <input type="number" id="fixed-rate-${i}" placeholder="e.g. 5.99" min="0.01" step="0.01"
+                       oninput="clearErr('field-fixed-rate-${i}')">
+                <div class="err-msg">Required for Fixed</div>
+              </div>
+              <div class="field" id="field-fixed-period-${i}" style="min-width:100px;">
+                <label>Fixed Period (years) *</label>
+                <input type="number" id="fixed-period-${i}" placeholder="e.g. 3" min="1" max="10"
+                       oninput="clearErr('field-fixed-period-${i}')">
+                <div class="err-msg">Required for Fixed</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function onRepaymentChange(i) {
+  const val = document.querySelector(`input[name="repayment-${i}"]:checked`)?.value;
+  const wrap = document.getElementById(`io-years-wrap-${i}`);
+  if (wrap) {
+    if (val === 'interest_only') {
+      wrap.classList.add('visible');
+    } else {
+      wrap.classList.remove('visible');
+      const inp = document.getElementById(`io-years-${i}`);
+      if (inp) inp.value = '';
+      clearErr(`field-io-years-${i}`);
+    }
+  }
+}
+
+function onRateChange(i) {
+  const val = document.querySelector(`input[name="rate-${i}"]:checked`)?.value;
+  const wrap = document.getElementById(`fixed-wrap-${i}`);
+  if (wrap) {
+    wrap.style.display = val === 'fixed' ? 'block' : 'none';
+    if (val !== 'fixed') {
+      const r = document.getElementById(`fixed-rate-${i}`);
+      const p = document.getElementById(`fixed-period-${i}`);
+      if (r) r.value = '';
+      if (p) p.value = '';
+      clearErr(`field-fixed-rate-${i}`);
+      clearErr(`field-fixed-period-${i}`);
+    }
+  }
+}
+
+function addSwitch() {
+  if (switchCount >= MAX_SWITCHES) return;
+  switchCount++;
+  const c = document.getElementById('switches-container');
+  const div = document.createElement('div');
+  div.innerHTML = buildSwitchCard(switchCount - 1);
+  c.appendChild(div.firstElementChild);
+  updateSwitchBadge();
+  updateAddSwitchBtn();
+}
+
+function removeSwitch(i) {
+  // Collect all switch data before re-render
+  const saved = [];
+  for (let j = 0; j < switchCount; j++) {
+    if (j === i) continue;
+    saved.push(collectSwitchData(j));
+  }
+  switchCount--;
+  renderSwitches();
+  // Restore saved data
+  saved.forEach((d, j) => restoreSwitchData(j, d));
+}
+
+function collectSwitchData(i) {
+  return {
+    loanAcc: document.getElementById(`loan-acc-${i}`)?.value || '',
+    repayment: document.querySelector(`input[name="repayment-${i}"]:checked`)?.value || 'principal_and_interest',
+    ioYears: document.getElementById(`io-years-${i}`)?.value || '',
+    rate: document.querySelector(`input[name="rate-${i}"]:checked`)?.value || 'variable',
+    fixedRate: document.getElementById(`fixed-rate-${i}`)?.value || '',
+    fixedPeriod: document.getElementById(`fixed-period-${i}`)?.value || '',
+  };
+}
+
+function restoreSwitchData(i, d) {
+  const loanEl = document.getElementById(`loan-acc-${i}`);
+  if (loanEl) loanEl.value = d.loanAcc;
+
+  const repEl = document.querySelector(`input[name="repayment-${i}"][value="${d.repayment}"]`);
+  if (repEl) { repEl.checked = true; onRepaymentChange(i); }
+
+  const ioEl = document.getElementById(`io-years-${i}`);
+  if (ioEl) ioEl.value = d.ioYears;
+
+  const rateEl = document.querySelector(`input[name="rate-${i}"][value="${d.rate}"]`);
+  if (rateEl) { rateEl.checked = true; onRateChange(i); }
+
+  const fixedRateEl = document.getElementById(`fixed-rate-${i}`);
+  if (fixedRateEl) fixedRateEl.value = d.fixedRate;
+  const fixedPeriodEl = document.getElementById(`fixed-period-${i}`);
+  if (fixedPeriodEl) fixedPeriodEl.value = d.fixedPeriod;
+}
+
+function updateSwitchBadge() {
+  document.getElementById('switch-count-badge').textContent = `${switchCount} of ${MAX_SWITCHES}`;
+}
+
+function updateAddSwitchBtn() {
+  document.getElementById('btn-add-switch').disabled = switchCount >= MAX_SWITCHES;
+}
+
+// ── Authorisation / Signature Cards ───────────────────────────────────────
+function renderAuthCards() {
+  const c = document.getElementById('auth-container');
+  // preserve existing signatures
+  const existing = {};
+  for (let i = 0; i < 4; i++) {
+    if (signatureData[i]) existing[i] = signatureData[i];
+  }
+  c.innerHTML = '';
+
+  for (let i = 0; i < borrowerCount; i++) {
+    c.innerHTML += `
+      <div class="auth-card" id="auth-card-${i}">
+        <div class="auth-card-title">Authorisation – Borrower ${i+1}</div>
+        <div class="field-row">
+          <div class="field" id="field-home-${i}">
+            <label>Home Contact Number</label>
+            <input type="tel" id="home-contact-${i}" placeholder="e.g. 07 3000 0000"
+                   oninput="clearErr('field-home-${i}')">
+            <div class="err-msg">Enter a valid phone number</div>
+          </div>
+          <div class="field" id="field-work-${i}">
+            <label>Work Contact Number</label>
+            <input type="tel" id="work-contact-${i}" placeholder="e.g. 07 3000 0001"
+                   oninput="clearErr('field-work-${i}')">
+            <div class="err-msg">Enter a valid phone number</div>
+          </div>
+          <div class="field" id="field-date-${i}">
+            <label>Date *</label>
+            <input type="date" id="date-${i}" value="${today()}"
+                   oninput="clearErr('field-date-${i}')">
+            <div class="err-msg">Required</div>
+          </div>
+        </div>
+
+        <div class="sig-label">Signature * <span style="font-weight:400;color:var(--muted)">(draw with mouse or touch)</span></div>
+        <div class="sig-wrap">
+          <canvas class="sig-canvas" id="sig-${i}" width="1200" height="240"></canvas>
+          <button type="button" class="sig-clear" onclick="clearSig(${i})">Clear</button>
+        </div>
+        <div class="field" id="field-sig-${i}">
+          <div class="err-msg" style="display:block;visibility:hidden;">Signature required</div>
+        </div>
+      </div>`;
+  }
+
+  // init canvases after render
+  for (let i = 0; i < borrowerCount; i++) {
+    initCanvas(i);
+    if (existing[i]) {
+      restoreSignature(i, existing[i]);
+    }
+  }
+}
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// ── Signature canvas ───────────────────────────────────────────────────────
+function initCanvas(i) {
+  const canvas = document.getElementById(`sig-${i}`);
+  if (!canvas) return;
+  drawingState[i] = { drawing: false, started: false, lastX: 0, lastY: 0 };
+  delete signatureData[i];
+
+  const getPos = (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width  / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const src = e.touches ? e.touches[0] : e;
+    return {
+      x: (src.clientX - rect.left) * scaleX,
+      y: (src.clientY - rect.top)  * scaleY,
+    };
+  };
+
+  canvas.addEventListener('mousedown',  (e) => startDraw(i, e, getPos(e)));
+  canvas.addEventListener('mousemove',  (e) => draw(i, e, getPos(e)));
+  canvas.addEventListener('mouseup',    ()  => endDraw(i, canvas));
+  canvas.addEventListener('mouseleave', ()  => endDraw(i, canvas));
+  canvas.addEventListener('touchstart', (e) => { e.preventDefault(); startDraw(i, e, getPos(e)); }, { passive: false });
+  canvas.addEventListener('touchmove',  (e) => { e.preventDefault(); draw(i, e, getPos(e)); },      { passive: false });
+  canvas.addEventListener('touchend',   ()  => endDraw(i, canvas));
+}
+
+function startDraw(i, e, pos) {
+  if (!drawingState[i]) drawingState[i] = { drawing: false, started: false, lastX: 0, lastY: 0 };
+  drawingState[i].drawing = true;
+  drawingState[i].lastX = pos.x;
+  drawingState[i].lastY = pos.y;
+}
+
+function draw(i, e, pos) {
+  if (!drawingState[i] || !drawingState[i].drawing) return;
+  const canvas = document.getElementById(`sig-${i}`);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.strokeStyle = '#1a1a2e';
+  ctx.lineWidth = 2.5;
+  ctx.lineCap  = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath();
+  ctx.moveTo(drawingState[i].lastX, drawingState[i].lastY);
+  ctx.lineTo(pos.x, pos.y);
+  ctx.stroke();
+  drawingState[i].lastX = pos.x;
+  drawingState[i].lastY = pos.y;
+  drawingState[i].started = true;
+}
+
+function endDraw(i, canvas) {
+  if (!drawingState[i]) return;
+  if (drawingState[i].drawing && drawingState[i].started) {
+    signatureData[i] = canvas.toDataURL('image/png');
+    canvas.classList.remove('error');
+    const errDiv = document.querySelector(`#field-sig-${i} .err-msg`);
+    if (errDiv) errDiv.style.visibility = 'hidden';
+  }
+  drawingState[i].drawing = false;
+}
+
+function clearSig(i) {
+  const canvas = document.getElementById(`sig-${i}`);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  delete signatureData[i];
+  drawingState[i] = { drawing: false, started: false, lastX: 0, lastY: 0 };
+}
+
+function restoreSignature(i, dataURI) {
+  const canvas = document.getElementById(`sig-${i}`);
+  if (!canvas) return;
+  const img = new window.Image();
+  img.onload = () => {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(img, 0, 0);
+    signatureData[i] = dataURI;
+    if (drawingState[i]) drawingState[i].started = true;
+  };
+  img.src = dataURI;
+}
+
+// ── Validation helpers ─────────────────────────────────────────────────────
+function clearErr(fieldId) {
+  const el = document.getElementById(fieldId);
+  if (el) el.classList.remove('error');
+}
+
+function setErr(fieldId, msg) {
+  const el = document.getElementById(fieldId);
+  if (!el) return;
+  el.classList.add('error');
+  if (msg) {
+    const m = el.querySelector('.err-msg');
+    if (m) m.textContent = msg;
+  }
+}
+
+function validatePhone(val) {
+  if (!val || !val.trim()) return true; // optional
+  const digits = val.replace(/[\s\-\(\)\+]/g, '');
+  return /^\d{8,}$/.test(digits);
+}
+
+// ── Collect & Submit ───────────────────────────────────────────────────────
+function collectData() {
+  let ok = true;
+
+  // Borrowers
+  const borrowers = [];
+  for (let i = 0; i < borrowerCount; i++) {
+    const surname    = document.getElementById(`surname-${i}`)?.value.trim() || '';
+    const givenNames = document.getElementById(`given-${i}`)?.value.trim() || '';
+    if (!surname)    { setErr(`field-surname-${i}`); ok = false; }
+    if (!givenNames) { setErr(`field-given-${i}`);  ok = false; }
+    borrowers.push({ surname, given_names: givenNames });
+  }
+
+  // Loan switches
+  const loan_switches = [];
+  for (let i = 0; i < switchCount; i++) {
+    const loanAcc = document.getElementById(`loan-acc-${i}`)?.value.trim() || '';
+    if (!loanAcc) { setErr(`field-loan-${i}`); ok = false; }
+
+    const repaymentType = document.querySelector(`input[name="repayment-${i}"]:checked`)?.value || 'principal_and_interest';
+    let ioYears = null;
+    if (repaymentType === 'interest_only') {
+      const ioVal = document.getElementById(`io-years-${i}`)?.value.trim();
+      if (!ioVal) { setErr(`field-io-years-${i}`); ok = false; }
+      else ioYears = parseInt(ioVal, 10);
+    }
+
+    const rateType = document.querySelector(`input[name="rate-${i}"]:checked`)?.value || 'variable';
+    let fixedRatePercent = null;
+    let fixedPeriodYears = null;
+    if (rateType === 'fixed') {
+      const rVal = document.getElementById(`fixed-rate-${i}`)?.value.trim();
+      const pVal = document.getElementById(`fixed-period-${i}`)?.value.trim();
+      if (!rVal) { setErr(`field-fixed-rate-${i}`); ok = false; }
+      else fixedRatePercent = parseFloat(rVal);
+      if (!pVal) { setErr(`field-fixed-period-${i}`); ok = false; }
+      else fixedPeriodYears = parseInt(pVal, 10);
+    }
+
+    loan_switches.push({
+      loan_account_number: loanAcc,
+      repayment_type: repaymentType,
+      interest_only_years: ioYears,
+      rate_type: rateType,
+      fixed_rate_percent: fixedRatePercent,
+      fixed_period_years: fixedPeriodYears,
+    });
+  }
+
+  // Reason
+  const reason = document.getElementById('reason-input')?.value.trim() || null;
+
+  // Authorisations
+  const authorisations = [];
+  for (let i = 0; i < borrowerCount; i++) {
+    const homeContact = document.getElementById(`home-contact-${i}`)?.value.trim() || null;
+    const workContact = document.getElementById(`work-contact-${i}`)?.value.trim() || null;
+    const sigDate     = document.getElementById(`date-${i}`)?.value || '';
+
+    if (!validatePhone(homeContact)) { setErr(`field-home-${i}`, 'Enter a valid phone number (min 8 digits)'); ok = false; }
+    if (!validatePhone(workContact)) { setErr(`field-work-${i}`, 'Enter a valid phone number (min 8 digits)'); ok = false; }
+    if (!sigDate) { setErr(`field-date-${i}`); ok = false; }
+
+    const sig = signatureData[i];
+    if (!sig) {
+      const canvas = document.getElementById(`sig-${i}`);
+      if (canvas) canvas.classList.add('error');
+      const errDiv = document.querySelector(`#field-sig-${i} .err-msg`);
+      if (errDiv) errDiv.style.visibility = 'visible';
+      ok = false;
+    }
+
+    authorisations.push({
+      signature_base64: sig || '',
+      home_contact: homeContact,
+      work_contact: workContact,
+      signed_date: sigDate,
+    });
+  }
+
+  if (!ok) return null;
+
+  return { borrowers, loan_switches, reason_for_request: reason, authorisations };
+}
+
+async function submitForm() {
+  const data = collectData();
+  if (!data) {
+    showToast('Please fix the highlighted fields before submitting.', 'error');
+    // scroll to first error
+    const firstErr = document.querySelector('.field.error, canvas.error');
+    if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  const btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.textContent = 'Submitting…';
+
+  try {
+    const res = await fetch('/api/v1/submissions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `Server error ${res.status}`);
+    }
+
+    const result = await res.json();
+    document.getElementById('success-ref').textContent = `Ref: ${result.id}`;
+    document.getElementById('success-overlay').classList.add('show');
+  } catch (e) {
+    showToast('Submission failed: ' + e.message, 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Submit Product Switch Request';
+  }
+}
+
+function resetForm() {
+  document.getElementById('success-overlay').classList.remove('show');
+  borrowerCount = 1;
+  switchCount = 1;
+  document.querySelector('input[name="borrower-count"][value="1"]').checked = true;
+  renderBorrowers();
+  renderSwitches();
+  renderAuthCards();
+  document.getElementById('reason-input').value = '';
+}
+
+// ── Toast ──────────────────────────────────────────────────────────────────
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show ' + type;
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.className = type; }, 4000);
+}
+</script>
+</body>
+</html>

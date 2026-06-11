@@ -1,0 +1,7 @@
+Starting Redraw Request API on http://localhost:8006
+INFO:     Will watch for changes in these directories: ['/Users/a.fernandes/Desktop/RedrawAPI']
+INFO:     Uvicorn running on http://0.0.0.0:8006 (Press CTRL+C to quit)
+INFO:     Started reloader process [48363] using WatchFiles
+INFO:     Started server process [48365]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.

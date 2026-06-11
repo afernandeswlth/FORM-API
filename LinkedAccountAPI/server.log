@@ -1,0 +1,289 @@
+Starting Linked Account API on http://localhost:8000
+INFO:     Will watch for changes in these directories: ['/Users/a.fernandes/Desktop/LinkedAccountAPI']
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Started reloader process [3654] using WatchFiles
+INFO:     Started server process [3656]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:56098 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56098 - "GET / HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3656]
+INFO:     Stopping reloader process [3654]
+INFO:     Will watch for changes in these directories: ['/Users/a.fernandes/Desktop/LinkedAccountAPI']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [3855] using WatchFiles
+INFO:     Started server process [3858]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:56143 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56156 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56156 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:56190 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:56221 - "GET / HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'email_sender.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3858]
+INFO:     Started server process [4210]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'email_sender.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [4210]
+INFO:     Started server process [4217]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:  WatchFiles detected changes in 'email_sender.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [4217]
+INFO:     Started server process [4219]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:57377 - "GET / HTTP/1.1" 200 OK
+WARNING:main:Email send failed for submission 975679ff-f954-48bf-9514-565595f9d28a: Email not configured. Set SMTP_USER and SMTP_PASS in your .env file.
+INFO:     127.0.0.1:59630 - "POST /api/v1/submissions HTTP/1.1" 201 Created
+INFO:     127.0.0.1:59630 - "GET /api/v1/submissions/975679ff-f954-48bf-9514-565595f9d28a/pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51756 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59357 - "GET / HTTP/1.1" 200 OK
+WARNING:main:Email send failed for submission 75345ebc-4962-4ec7-8a83-0a2920cdab52: Email not configured. Set SMTP_USER and SMTP_PASS in your .env file.
+INFO:     127.0.0.1:59538 - "POST /api/v1/submissions HTTP/1.1" 201 Created
+INFO:     127.0.0.1:59538 - "GET /api/v1/submissions/75345ebc-4962-4ec7-8a83-0a2920cdab52/pdf HTTP/1.1" 200 OK
+WARNING:  WatchFiles detected changes in 'pdf_generator.py', 'models.py', 'main.py'. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [4219]
+INFO:     Started server process [20902]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+WARNING:main:Email send failed for submission a7921ede-0736-4779-aa0f-e2aee9428d23: Email not configured. Set SMTP_USER and SMTP_PASS in your .env file.
+INFO:     127.0.0.1:61123 - "POST /api/v1/submissions HTTP/1.1" 201 Created
+INFO:     127.0.0.1:61123 - "GET /api/v1/submissions/a7921ede-0736-4779-aa0f-e2aee9428d23/pdf HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51090 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51090 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:60870 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61280 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61671 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61732 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61821 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61902 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61988 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62023 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52580 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51232 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61817 - "GET / HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/uvicorn/protocols/http/httptools_impl.py", line 401, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 74, in app
+    await response(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/responses.py", line 333, in __call__
+    async with await anyio.open_file(self.path, mode="rb") as file:
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_core/_fileio.py", line 187, in open_file
+    fp = await to_thread.run_sync(
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_backends/_asyncio.py", line 2502, in run_sync_in_worker_thread
+    return await future
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+PermissionError: [Errno 1] Operation not permitted: 'static/index.html'
+INFO:     127.0.0.1:61819 - "GET / HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/uvicorn/protocols/http/httptools_impl.py", line 401, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 74, in app
+    await response(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/responses.py", line 333, in __call__
+    async with await anyio.open_file(self.path, mode="rb") as file:
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_core/_fileio.py", line 187, in open_file
+    fp = await to_thread.run_sync(
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_backends/_asyncio.py", line 2502, in run_sync_in_worker_thread
+    return await future
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+PermissionError: [Errno 1] Operation not permitted: 'static/index.html'
+INFO:     127.0.0.1:62017 - "GET / HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/uvicorn/protocols/http/httptools_impl.py", line 401, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 74, in app
+    await response(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/responses.py", line 333, in __call__
+    async with await anyio.open_file(self.path, mode="rb") as file:
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_core/_fileio.py", line 187, in open_file
+    fp = await to_thread.run_sync(
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_backends/_asyncio.py", line 2502, in run_sync_in_worker_thread
+    return await future
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+PermissionError: [Errno 1] Operation not permitted: 'static/index.html'
+INFO:     127.0.0.1:62019 - "GET / HTTP/1.1" 200 OK
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/uvicorn/protocols/http/httptools_impl.py", line 401, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/uvicorn/middleware/proxy_headers.py", line 70, in __call__
+    return await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 187, in __call__
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/errors.py", line 165, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/middleware/exceptions.py", line 62, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 715, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 735, in app
+    await route.handle(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 288, in handle
+    await self.app(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 76, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 62, in wrapped_app
+    raise exc
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/_exception_handler.py", line 51, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/routing.py", line 74, in app
+    await response(scope, receive, send)
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/starlette/responses.py", line 333, in __call__
+    async with await anyio.open_file(self.path, mode="rb") as file:
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_core/_fileio.py", line 187, in open_file
+    fp = await to_thread.run_sync(
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/to_thread.py", line 63, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_backends/_asyncio.py", line 2502, in run_sync_in_worker_thread
+    return await future
+  File "/Users/a.fernandes/Library/Python/3.9/lib/python/site-packages/anyio/_backends/_asyncio.py", line 986, in run
+    result = context.run(func, *args)
+PermissionError: [Errno 1] Operation not permitted: 'static/index.html'
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [20902]
+INFO:     Stopping reloader process [3855]
+Starting Linked Account API on http://localhost:8001
+INFO:     Will watch for changes in these directories: ['/Users/a.fernandes/Desktop/LinkedAccountAPI']
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [48446] using WatchFiles
+INFO:     Started server process [48448]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     127.0.0.1:62091 - "GET / HTTP/1.1" 200 OK
+WARNING:main:Email send failed for submission e373fd5d-1454-4cfe-b56e-7e7b5e563358: Email not configured. Set SMTP_USER and SMTP_PASS in your .env file.
+INFO:     127.0.0.1:62093 - "POST /api/v1/submissions HTTP/1.1" 201 Created
+INFO:     127.0.0.1:62093 - "GET /api/v1/submissions/e373fd5d-1454-4cfe-b56e-7e7b5e563358/pdf HTTP/1.1" 200 OK

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WLTH – Forms Portal</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --dark:   #1a1a2e;
+    --blue:   #1565C0;
+    --bg:     #f2f3f5;
+    --white:  #ffffff;
+    --border: #e0e0e0;
+    --grey:   #757575;
+    --muted:  #f5f5f5;
+    --radius: 12px;
+  }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--dark);
+    padding: 0 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .logo { color: #fff; font-weight: 800; font-size: 1.25rem; letter-spacing: .05em; }
+  .header-sub { color: rgba(255,255,255,.45); font-size: .8rem; letter-spacing: .04em; }
+
+  /* ── Main ── */
+  main {
+    flex: 1;
+    max-width: 1020px;
+    margin: 0 auto;
+    padding: 48px 24px 64px;
+    width: 100%;
+  }
+
+  .page-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--dark);
+    margin-bottom: 8px;
+  }
+  .page-sub {
+    font-size: .95rem;
+    color: var(--grey);
+    margin-bottom: 40px;
+  }
+
+  /* ── Grid ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 720px) { .form-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 480px) { .form-grid { grid-template-columns: 1fr; } }
+
+  /* ── Card base ── */
+  .form-card {
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 26px 22px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    transition: box-shadow .15s, border-color .15s, transform .12s;
+    min-height: 190px;
+  }
+
+  /* Active (linked) card */
+  .form-card.active {
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  .form-card.active:hover {
+    border-color: var(--blue);
+    box-shadow: 0 4px 20px rgba(21, 101, 192, .15);
+    transform: translateY(-2px);
+  }
+  .form-card.active:hover .card-action { color: var(--blue); }
+
+  /* Disabled (coming soon) card */
+  .form-card.disabled {
+    background: var(--muted);
+    opacity: .72;
+    pointer-events: none;
+  }
+
+  /* ── Card contents ── */
+  .card-icon  { font-size: 1.8rem; line-height: 1; margin-bottom: 4px; }
+  .card-title { font-size: .95rem; font-weight: 700; color: var(--dark); }
+  .card-desc  { font-size: .8rem; color: var(--grey); line-height: 1.5; flex: 1; }
+  .card-action {
+    font-size: .82rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    transition: color .12s;
+  }
+  .card-action svg { transition: transform .12s; }
+  .form-card.active:hover .card-action svg { transform: translateX(3px); }
+
+  /* Coming soon badge */
+  .soon-badge {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: #e8eaf6;
+    color: #5c6bc0;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 20px;
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    text-align: center;
+    font-size: .75rem;
+    color: var(--grey);
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    background: var(--white);
+    flex-shrink: 0;
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <span class="logo">WLTH</span>
+  <span class="header-sub">FORMS PORTAL</span>
+</header>
+
+<main>
+  <h1 class="page-title">Submit a Form</h1>
+  <p class="page-sub">Select the form you would like to complete and submit digitally.</p>
+
+  <div class="form-grid">
+
+    <!-- ── Direct Debit Request ── ACTIVE ── -->
+    <a class="form-card active" href="http://localhost:8002" target="_blank">
+      <div class="card-icon">💳</div>
+      <div class="card-title">Direct Debit Request</div>
+      <div class="card-desc">Arrange for your loan repayments to be automatically debited from your nominated account.</div>
+      <div class="card-action">
+        Start form
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+             viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <!-- ── Linked Account Nomination ── ACTIVE ── -->
+    <a class="form-card active" href="http://localhost:8001" target="_blank">
+      <div class="card-icon">🏦</div>
+      <div class="card-title">Linked Account Nomination</div>
+      <div class="card-desc">Set up a new bank account to be linked to your loan for direct debit or offset purposes.</div>
+      <div class="card-action">
+        Start form
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+             viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <!-- ── Repayment Change ── ACTIVE ── -->
+    <a class="form-card active" href="http://localhost:8003" target="_blank">
+      <div class="card-icon">🔄</div>
+      <div class="card-title">Repayment Change</div>
+      <div class="card-desc">Request a change to your repayment amount or repayment frequency.</div>
+      <div class="card-action">
+        Start form
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+             viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <!-- ── Redraw Request ── ACTIVE ── -->
+    <a class="form-card active" href="http://localhost:8006" target="_blank">
+      <div class="card-icon">💸</div>
+      <div class="card-title">Redraw Request</div>
+      <div class="card-desc">Access available redraw funds from your WLTH loan account.</div>
+      <div class="card-action">
+        Start form
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+             viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <!-- ── Open Offset ── ACTIVE ── -->
+    <a class="form-card active" href="http://localhost:8004" target="_blank">
+      <div class="card-icon">⚖️</div>
+      <div class="card-title">Open Offset</div>
+      <div class="card-desc">Open an offset account to be linked to your home loan.</div>
+      <div class="card-action">
+        Start form
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+             viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+    <!-- ── Permanent Principle Reduction ── -->
+    <div class="form-card disabled">
+      <span class="soon-badge">Coming Soon</span>
+      <div class="card-icon">📉</div>
+      <div class="card-title">Permanent Principle Reduction</div>
+      <div class="card-desc">Request a permanent reduction to your outstanding loan principal.</div>
+    </div>
+
+    <!-- ── Product Switch ── ACTIVE ── -->
+    <a class="form-card active" href="http://localhost:8005" target="_blank">
+      <div class="card-icon">🔀</div>
+      <div class="card-title">Product Switch</div>
+      <div class="card-desc">Switch your existing loan to a different repayment type or interest rate type.</div>
+      <div class="card-action">
+        Start form
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2"
+             viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </a>
+
+  </div>
+</main>
+
+<footer class="site-footer">
+  WLTH Lend Pty Ltd (CRN 525 873) as authorised by WLTH Pty Ltd (ACN 639 591 245 and AFSL and ACL 525 752)
+</footer>
+
+</body>
+</html>
