@@ -6,11 +6,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timezone
 from typing import List
 
-from models import RedrawSubmission, SubmissionResponse, SubmissionSummary
-from storage import create_submission, get_submission, list_submissions, delete_submission
-from pdf_generator import generate_pdf
-from email_sender import send_submission_email
-from thread_store import get_thread_message_id, save_thread_message_id
+from pathlib import Path
+from .models import RedrawSubmission, SubmissionResponse, SubmissionSummary
+from .storage import create_submission, get_submission, list_submissions, delete_submission
+from .pdf_generator import generate_pdf
+from .email_sender import send_submission_email
+from .thread_store import get_thread_message_id, save_thread_message_id
+
+BASE_DIR = Path(__file__).parent
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -31,12 +34,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="redraw-static")
 
 
 @app.get("/", include_in_schema=False)
 def root():
-    return FileResponse("static/index.html")
+    return FileResponse(str(BASE_DIR / "static" / "index.html"))
 
 
 # ── Submissions ───────────────────────────────────────────────────────────────

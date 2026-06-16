@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from typing import Optional
 
-THREAD_FILE = Path("ddr_email_threads.json")
+THREAD_FILE = Path(__file__).parent / "ddr_email_threads.json"
 
 
 def _load() -> dict:

@@ -4,7 +4,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 from typing import Optional, Dict, List
 
-STORAGE_FILE = Path("submissions.json")
+STORAGE_FILE = Path(__file__).parent / "submissions.json"
 
 
 def _load() -> Dict:

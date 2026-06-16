@@ -273,7 +273,7 @@
     <div class="logo">WLTH</div>
     <div class="subtitle">Redraw Request</div>
   </div>
-  <a class="btn-back" href="http://localhost:8000">← All Forms</a>
+  <a class="btn-back" href="/">← All Forms</a>
 </header>
 
 <div class="container">
@@ -684,7 +684,7 @@ async function submitForm() {
   btn.textContent = 'Submitting…';
 
   try {
-    const res = await fetch('/api/v1/submissions', {
+    const res = await fetch('api/v1/submissions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),

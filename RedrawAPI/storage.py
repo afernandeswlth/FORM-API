@@ -4,7 +4,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 from typing import Optional, Dict, List
 
-STORE_DIR = Path("rr_submissions")
+STORE_DIR = Path(__file__).parent / "rr_submissions"
 
 
 def _store_file() -> Path:

@@ -160,7 +160,7 @@
 
 <header class="site-header">
   <span class="logo">WLTH</span>
-  <a class="btn-back" href="http://localhost:8000">
+  <a class="btn-back" href="/">
     <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2"
          viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/>
       <polyline points="12 19 5 12 12 5"/></svg>
@@ -765,7 +765,7 @@ async function submitForm() {
   btn.textContent = 'Submitting…';
 
   try {
-    const res = await fetch('/api/v1/submissions', {
+    const res = await fetch('api/v1/submissions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(collectData()),
