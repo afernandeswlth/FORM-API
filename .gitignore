@@ -1,6 +1,7 @@
 .env
 .nuxt/
 .output/
+.vercel/output/
 node_modules/
 dist/
 data/
