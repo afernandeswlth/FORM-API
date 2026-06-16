@@ -1,0 +1,9 @@
+{
+  "version": 2,
+  "builds": [
+    { "src": "FormHub/static/index.html", "use": "@vercel/static" }
+  ],
+  "routes": [
+    { "src": "/(.*)", "dest": "FormHub/static/index.html" }
+  ]
+}
