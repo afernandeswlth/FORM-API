@@ -1,7 +1,9 @@
 .env
-__pycache__/
-*.pyc
-*.pyo
-*_submissions/
-*_email_threads.json
+.nuxt/
+.output/
+.vercel/output/
+node_modules/
+dist/
+data/
+*.log
 .DS_Store

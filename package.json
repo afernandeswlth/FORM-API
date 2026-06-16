@@ -1,0 +1,29 @@
+{
+  "name": "wlth-forms",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --port 3000",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "nuxt": "^3.14.0",
+    "vue": "^3.5.0",
+    "pdfkit": "^0.15.0",
+    "nodemailer": "^6.9.15",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/nodemailer": "^6.4.16",
+    "@types/pdfkit": "^0.13.4",
+    "typescript": "^5.5.0"
+  },
+  "allowScripts": {
+    "esbuild@0.27.7": true,
+    "esbuild@0.28.1": true,
+    "@parcel/watcher@2.5.6": true,
+    "fsevents@2.3.3": true
+  }
+}
