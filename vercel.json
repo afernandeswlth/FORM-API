@@ -1,9 +1,13 @@
 {
   "version": 2,
   "builds": [
-    { "src": "FormHub/static/index.html", "use": "@vercel/static" }
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "50mb" }
+    }
   ],
   "routes": [
-    { "src": "/(.*)", "dest": "FormHub/static/index.html" }
+    { "src": "/(.*)", "dest": "api/index.py" }
   ]
 }

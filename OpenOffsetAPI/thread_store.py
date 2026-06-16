@@ -1,8 +1,10 @@
 import json
+import os
 from pathlib import Path
+_DATA_BASE = Path('/tmp/wlth') if os.getenv('VERCEL') else Path(__file__).parent
 from typing import Optional
 
-THREAD_FILE = Path(__file__).parent / "oo_email_threads.json"
+THREAD_FILE = _DATA_BASE / "oo_email_threads.json"
 
 
 def _load() -> dict:

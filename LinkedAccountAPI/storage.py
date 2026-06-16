@@ -1,10 +1,12 @@
 import json
 import uuid
+import os
 from pathlib import Path
+_DATA_BASE = Path('/tmp/wlth') if os.getenv('VERCEL') else Path(__file__).parent
 from datetime import datetime, timezone
 from typing import Optional, Dict, List
 
-STORAGE_FILE = Path(__file__).parent / "submissions.json"
+STORAGE_FILE = _DATA_BASE / "submissions.json"
 
 
 def _load() -> Dict:
